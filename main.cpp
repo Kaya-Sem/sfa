@@ -1,12 +1,11 @@
 #include "transducer/TextFileTransducer.hpp"
+#include "transducer/TransducerManager.hpp"
 #include "watcher/watcher.hpp"
 #include <atomic>
 #include <iostream>
 #include <memory>
 #include <ostream>
 #include <thread>
-#include "transducer/TransducerManager.hpp"
-#include "transducer/TransducerManager.hpp"
 
 using namespace std;
 using namespace wtr;
@@ -17,10 +16,18 @@ using namespace wtr;
  * relations.
  * 3) These values are passed to the appropriate file, it's metadata
  * being updated.
- * 4) The node in the graph/database gets updated
+ * 4) The node in the triplestore gets updated
  */
 
-void processQueue() {
+TransducerManager *initializeTransducerManager() {
+
+  TransducerManager *m = new TransducerManager;
+  m->registerTransducer("txt", make_unique<TextFileTransducer>());
+
+  return m;
+}
+
+void processQueue(TransducerManager *manager) {
   while (running) {
     unique_lock<mutex> lock(mtx);
     cv.wait(lock, [] { return !eventQueue.empty() || !running; });
@@ -29,21 +36,18 @@ void processQueue() {
       event e = eventQueue.front();
       eventQueue.pop();
 
-      // TODO: transduce instead of stupidly printing
-      cout << to<string>(e.effect_type) + ' ' + to<string>(e.path_type) + ' ' +
-                  to<string>(e.path_name) +
-                  (e.associated ? " -> " + to<string>(e.associated->path_name)
-                                : "")
-           << endl;
+      // Example: Process the event using the manager and transducer
+      cout << "trying to process " << e.path_name << endl;
+      auto result = manager->processFile(File(e.path_name));
+
+      for (const auto &[key, value] : result) {
+        cout << key << ": " << value << endl;
+      }
     }
   }
 }
 
 int main() {
-
-  /* Create a transducer manager and register a .txt transducer */
-  TransducerManager manager;
-  manager.registerTransducer("txt", make_unique<TextFileTransducer>());
 
   const char *homeDir = std::getenv("HOME");
   if (!homeDir) {
@@ -51,8 +55,10 @@ int main() {
     return 1;
   }
 
-  // Start the event processing thread
-  thread processingThread(processQueue);
+  TransducerManager *manager = initializeTransducerManager();
+
+  // Start the event processing thread with the manager
+  thread processingThread([manager]() { processQueue(manager); });
 
   // Watch the user's home directory asynchronously
   auto watcher = watch(homeDir, queueEvent);
@@ -60,18 +66,12 @@ int main() {
   // Main thread can continue doing other work here
   getchar();
 
-  File file{"/home/kayasem/hi.txt"};
-  auto result = manager.processFile(file);
-
-  for (const auto& [key, value] : result) {
-        std::cout << key << ": " << value << std::endl;
-    }
-
-
   // Stop the watcher and processing thread
   running = false;
   cv.notify_one(); // Notify the processing thread to exit
   processingThread.join();
+
+  delete manager;
 
   // Close the watcher
   return watcher.close() ? 0 : 1;
