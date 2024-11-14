@@ -11,7 +11,7 @@ atomic<bool> running(true);
 mutex mtx;
 condition_variable cv;
 
-vector<string> blacklistedPaths = {"/home/kayasem/.cache"};
+vector<string> blacklistedPaths = {};
 
 bool isBlacklisted(const string& path) {
   for (const auto& blacklistedPath : blacklistedPaths) {

@@ -1,6 +1,6 @@
 
 // main.cpp
-#include "watcher.hpp"
+#include "watcher/watcher.hpp"
 #include <atomic>
 #include <iostream>
 #include <ostream>
@@ -12,9 +12,9 @@ using namespace wtr;
 /* 1) Event is processed from the queue. This is passed to the relevant
  *    transducer. Transducers are (usually) based on file extension.
  * 2) the transducer gives back a key-value map, that indicate labels and
- * relations. 
+ * relations.
  * 3) These values are passed to the appropriate file, it's metadata
- * being updated. 
+ * being updated.
  * 4) The node in the graph/database gets updated
  */
 
@@ -36,8 +36,8 @@ void processQueue() {
 }
 
 int main() {
-  // Get the user's home directory from the environment variable
-  const char* homeDir = std::getenv("HOME");
+
+  const char *homeDir = std::getenv("HOME");
   if (!homeDir) {
     cerr << "Failed to get home directory" << endl;
     return 1;
@@ -50,7 +50,6 @@ int main() {
   auto watcher = watch(homeDir, queueEvent);
 
   // Main thread can continue doing other work here
-  // (We will just wait for a newline to terminate the program)
   getchar();
 
   // Stop the watcher and processing thread
