@@ -1,24 +1,45 @@
+# Compiler and flags
+CXX = g++
+CXXFLAGS = -std=c++17
+LDFLAGS =
 
-# Makefile
+# Directories
+SRC_DIR = .
+BUILD_DIR = build
+TRANSDUCER_DIR = transducer
+WATCHER_DIR = watcher
 
-CXX = g++               # Set the C++ compiler
-CXXFLAGS = -std=c++17    # Specify the C++ standard
-LDFLAGS =                # Linker flags (if needed)
-SRC = main.cpp watcher.cpp  # Source files
-OBJ = $(SRC:.cpp=.o)     # Object files
-EXEC = sfa   # Output executable
+# Source files
+SRCS = $(wildcard $(SRC_DIR)/*.cpp) \
+       $(wildcard $(TRANSDUCER_DIR)/*.cpp) \
+       $(wildcard $(WATCHER_DIR)/*.cpp)
+
+# Object files (maintain directory structure in build folder)
+OBJS = $(SRCS:%.cpp=$(BUILD_DIR)/%.o)
+
+# Output executable
+EXEC = $(BUILD_DIR)/sfa
 
 # Default target
-all: $(EXEC)
+all: prep $(EXEC)
+
+# Create build directory structure
+prep:
+	@mkdir -p $(BUILD_DIR)
+	@mkdir -p $(BUILD_DIR)/$(TRANSDUCER_DIR)
+	@mkdir -p $(BUILD_DIR)/$(WATCHER_DIR)
 
 # Rule to build the executable
-$(EXEC): $(OBJ)
-	$(CXX) $(OBJ) -o $(EXEC) $(LDFLAGS)
+$(EXEC): $(OBJS)
+	$(CXX) $(OBJS) -o $(EXEC) $(LDFLAGS)
 
 # Rule to compile source files into object files
-%.o: %.cpp watcher.hpp
+$(BUILD_DIR)/%.o: %.cpp
+	@mkdir -p $(dir $@)
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-# Clean up object files and executable
+# Clean up build directory and executable
 clean:
-	rm -f $(OBJ) $(EXEC)
+	rm -rf $(BUILD_DIR)
+
+.PHONY: all prep clean

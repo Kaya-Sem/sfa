@@ -1,9 +1,6 @@
-
-// watcher.hpp
 #ifndef WATCHER_HPP
 #define WATCHER_HPP
 
-#include <iostream>
 #include <string>
 #include <queue>
 #include <atomic>

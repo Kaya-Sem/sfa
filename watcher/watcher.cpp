@@ -1,5 +1,3 @@
-
-// watcher.cpp
 #include "watcher.hpp"
 
 using namespace std;

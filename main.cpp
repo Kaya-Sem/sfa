@@ -1,10 +1,12 @@
-
-// main.cpp
+#include "transducer/TextFileTransducer.hpp"
 #include "watcher/watcher.hpp"
 #include <atomic>
 #include <iostream>
+#include <memory>
 #include <ostream>
 #include <thread>
+#include "transducer/TransducerManager.hpp"
+#include "transducer/TransducerManager.hpp"
 
 using namespace std;
 using namespace wtr;
@@ -26,6 +28,8 @@ void processQueue() {
     while (!eventQueue.empty()) {
       event e = eventQueue.front();
       eventQueue.pop();
+
+      // TODO: transduce instead of stupidly printing
       cout << to<string>(e.effect_type) + ' ' + to<string>(e.path_type) + ' ' +
                   to<string>(e.path_name) +
                   (e.associated ? " -> " + to<string>(e.associated->path_name)
@@ -36,6 +40,10 @@ void processQueue() {
 }
 
 int main() {
+
+  /* Create a transducer manager and register a .txt transducer */
+  TransducerManager manager;
+  manager.registerTransducer("txt", make_unique<TextFileTransducer>());
 
   const char *homeDir = std::getenv("HOME");
   if (!homeDir) {
@@ -51,6 +59,14 @@ int main() {
 
   // Main thread can continue doing other work here
   getchar();
+
+  File file{"/home/kayasem/hi.txt"};
+  auto result = manager.processFile(file);
+
+  for (const auto& [key, value] : result) {
+        std::cout << key << ": " << value << std::endl;
+    }
+
 
   // Stop the watcher and processing thread
   running = false;
