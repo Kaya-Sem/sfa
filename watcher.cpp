@@ -32,22 +32,7 @@ void queueEvent(event e) {
   cv.notify_one();
 }
 
-void processQueue() {
-  while (running) {
-    unique_lock<mutex> lock(mtx);
-    cv.wait(lock, []{ return !eventQueue.empty() || !running; });
 
-    while (!eventQueue.empty()) {
-      event e = eventQueue.front();
-      eventQueue.pop();
-      cout << to<string>(e.effect_type) + ' '
-           + to<string>(e.path_type)   + ' '
-           + to<string>(e.path_name)
-           + (e.associated ? " -> " + to<string>(e.associated->path_name) : "")
-           << endl;
-    }
-  }
-}
 
 queue<event>& getFileSystemEventQueue() {
   return eventQueue;

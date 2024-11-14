@@ -31,7 +31,7 @@ bool isBlacklisted(const string& path);
 void queueEvent(event e);
 
 // Function to process the event queue in a separate thread
-void processQueue();
+//void processQueue();
 
 // Function to get the event queue
 queue<event>& getFileSystemEventQueue();
