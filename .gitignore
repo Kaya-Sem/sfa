@@ -1,0 +1,25 @@
+
+# Ignore all .o files
+*.o
+
+# Ignore Makefile product files (binaries, object files, etc.)
+# Common build artifacts
+Makefile
+Makefile.in
+Makefile.am
+*.out
+*.a
+sfa
+*.gch
+*.so
+*.exe
+*.dll
+*.dmg
+*.app
+*.log
+
+# Ignore directories commonly used for build output
+/target/
+/build/
+/bin/
+/obj/
