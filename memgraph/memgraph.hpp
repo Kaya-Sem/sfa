@@ -1,9 +1,10 @@
 #ifndef MEMGRAPH_HPP
 #define MEMGRAPH_HPP
 
-#include <map>
-#include <set>
+#include "../transducer/Transducer.hpp"
 #include <string>
+#include <unordered_map>
+#include <vector>
 
 using namespace std;
 
@@ -29,13 +30,12 @@ public:
 
 class MemGraph {
 public:
-  map<string, Node *> Nodes;
-  set<Edge> Edges;
+  unordered_map<string, Node *> Nodes;
+  vector<Edge *> Edges;
 
   MemGraph();
   void removeNode(string ID);
-  void createNode(string ID, NodeType type, int value);
-  void updateNode(string ID, int value);
+  void updateFromTriple(Triple triple);
 };
 
 #endif
