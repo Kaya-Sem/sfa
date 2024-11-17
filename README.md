@@ -25,3 +25,6 @@ The semantic file system is designed with extensibility in mind, allowing users 
 #### Modularity
 
 The system is modular by design, so you can load and unload transducers dynamically without interrupting the core daemon. This architecture ensures that the file system remains performant and flexible, even as new modules are added.
+
+
+⚠️ **Disclaimer:** This project is currently a proof of concept and is **not usable** at this point in time. It is under active development and is likely to undergo significant changes before becoming a fully functional system.
