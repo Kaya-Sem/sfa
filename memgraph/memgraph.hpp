@@ -33,6 +33,9 @@ public:
   set<Edge> Edges;
 
   MemGraph();
+  void removeNode(string ID);
+  void createNode(string ID, NodeType type, int value);
+  void updateNode(string ID, int value);
 };
 
 #endif
