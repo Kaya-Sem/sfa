@@ -13,15 +13,20 @@ using namespace std;
  * 35"
  */
 
-enum Predicate { hasTitle, hasSize };
+class Object {
+public:
+  bool isLiteral;
+  string value;
+  Object(bool isLiteral, string value) : isLiteral(isLiteral), value(value) {}
+};
 
 //  TODO: make subject and object classes / enums of their own
 class Triple {
 public:
   string subject;
-  Predicate predicate;
-  string object;
-  Triple(string subject, Predicate predicate, string object)
+  string predicate;
+  Object object;
+  Triple(string subject, string predicate, Object object)
       : subject(subject), predicate(predicate), object(object) {}
 };
 
