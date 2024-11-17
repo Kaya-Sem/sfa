@@ -4,11 +4,16 @@ The Semantic File System is an advanced file management tool that enriches tradi
 
 ```mermaid
 graph LR
-    subgraph " "
+ 
         direction LR
-        event --> transduce --> update_graph
-    end
-    update_graph --> event
+        2[In-Memory Graph]
+        1[filesystem event] --> transducer -- Triple --> 2
+        2 <--> 3[On-Disk RDF Triplestore]
+        4[User-Driven Semantic Update] --> 2
+        5[Virtual Directories]
+        6[Applications]
+        2 --> 5
+        2 <--> 6
 
 ```
 
