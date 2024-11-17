@@ -1,6 +1,6 @@
 # Semantic Filesystem Abstraction
 
-The Semantic File System is an advanced file management tool that enriches traditional file systems with semantic capabilities. It enables powerful querying and virtual directory creation by establishing relationships, tags, and metadata across files. With features like an extensible daemon and recursive directory monitoring, the system allows for seamless and customizable data organization. Users can further enhance functionality by developing transducers in C, making the system highly modular and adaptable to diverse workflows.
+Semantic Filesystem Abstraction is an advanced file management tool that enriches traditional file systems with semantic capabilities. It enables powerful querying and virtual directory creation by establishing relationships, tags, and metadata across files. With features like an extensible daemon and recursive directory monitoring, the system allows for seamless and customizable data organization. Users can further enhance functionality by developing transducers in C, making the system highly modular and adaptable to diverse workflows.
 
 ```mermaid
 graph LR
