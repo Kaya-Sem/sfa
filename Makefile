@@ -8,10 +8,12 @@ SRC_DIR = .
 BUILD_DIR = build
 TRANSDUCER_DIR = transducer
 WATCHER_DIR = watcher
+MEMGRAPH_DIR = memgraph
 
 # Source files
 SRCS = $(wildcard $(SRC_DIR)/*.cpp) \
        $(wildcard $(TRANSDUCER_DIR)/*.cpp) \
+       $(wildcard $(MEMGRAPH_DIR)/*.cpp) \
        $(wildcard $(WATCHER_DIR)/*.cpp)
 
 # Object files (maintain directory structure in build folder)
@@ -28,6 +30,7 @@ prep:
 	@mkdir -p $(BUILD_DIR)
 	@mkdir -p $(BUILD_DIR)/$(TRANSDUCER_DIR)
 	@mkdir -p $(BUILD_DIR)/$(WATCHER_DIR)
+	@mkdir -p $(BUILD_DIR)/$(MEMGRAPH_DIR)
 
 # Rule to build the executable
 $(EXEC): $(OBJS)
