@@ -1,8 +1,8 @@
 #ifndef TRANSDUCER_HPP
 #define TRANSDUCER_HPP
 
-#include <set>
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -42,7 +42,7 @@ public:
 class Transducer {
 public:
   virtual ~Transducer() = default;
-  virtual set<Triple> process(const File &file) const = 0;
+  virtual std::vector<Triple> process(const File &file) const = 0;
 };
 
 #endif

@@ -1,9 +1,7 @@
-#include "transducer/TextFileTransducer.hpp"
 #include "transducer/TransducerManager.hpp"
 #include "watcher/watcher.hpp"
 #include <atomic>
 #include <iostream>
-#include <memory>
 #include <ostream>
 #include <thread>
 
@@ -22,7 +20,6 @@ using namespace wtr;
 TransducerManager *initializeTransducerManager() {
 
   TransducerManager *m = new TransducerManager;
-  m->registerTransducer("txt", make_unique<TextFileTransducer>());
 
   return m;
 }
@@ -40,8 +37,8 @@ void processQueue(TransducerManager *manager) {
       cout << "trying to process " << e.path_name << endl;
       auto result = manager->processFile(File(e.path_name));
 
-      for (const auto &[key, value] : result) {
-        cout << key << ": " << value << endl;
+      for (const auto &[subject, predicate, object] : result) {
+        cout << subject << ", " << predicate << ", " << object.value << endl;
       }
     }
   }

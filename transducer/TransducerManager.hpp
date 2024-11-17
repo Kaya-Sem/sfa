@@ -4,6 +4,7 @@
 #include "Transducer.hpp"
 #include <memory>
 #include <unordered_map>
+#include <vector>
 
 using namespace std;
 
@@ -14,7 +15,7 @@ private:
 public:
   void registerTransducer(const string &extension,
                           unique_ptr<Transducer> transducer);
-  map<string, string> processFile(const File &file) const;
+  std::vector<Triple> processFile(const File &file) const;
 };
 
 #endif
