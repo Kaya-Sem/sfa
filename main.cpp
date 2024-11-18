@@ -8,20 +8,8 @@
 using namespace std;
 using namespace wtr;
 
-/* 1) Event is processed from the queue. This is passed to the relevant
- *    transducer. Transducers are (usually) based on file extension.
- * 2) the transducer gives back a key-value map, that indicate labels and
- * relations.
- * 3) These values are passed to the appropriate file, it's metadata
- * being updated.
- * 4) The node in the triplestore gets updated
- */
-
 TransducerManager *initializeTransducerManager() {
-
-  TransducerManager *m = new TransducerManager;
-
-  return m;
+  return new TransducerManager;
 }
 
 void processQueue(TransducerManager *manager) {

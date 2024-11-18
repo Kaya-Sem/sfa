@@ -16,7 +16,7 @@ std::vector<Triple> TransducerManager::processFile(const File &file) const {
   if (it != transducers.end()) {
     return it->second->process(file); // transducer found
   } else {
-    // default transducer  TODO: create good default transducer
+    // default transducer  TODO: create good default transducer. Prefix matching system?
     result.push_back(
         *new Triple(file.path, "hasExtension", *new Object(true, extension)));
     return result;
