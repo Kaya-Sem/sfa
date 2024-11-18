@@ -51,6 +51,8 @@ int main() {
   // Main thread can continue doing other work here
   getchar();
 
+  //  TODO: created method to cleanly close the full service. Remove and clean up threads. Remove data structures.
+  //  An interprocess signal should be able to cleanly shutdown the service.
   // Stop the watcher and processing thread
   running = false;
   cv.notify_one(); // Notify the processing thread to exit
