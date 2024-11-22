@@ -2,6 +2,7 @@
 #define TRANSDUCER_HPP
 
 #include <string>
+#include <variant>
 #include <vector>
 
 using namespace std;
@@ -16,8 +17,9 @@ using namespace std;
 class Object {
 public:
   bool isLiteral;
-  string value;
-  Object(bool isLiteral, string value) : isLiteral(isLiteral), value(value) {}
+  std::variant<string, unsigned long int> value;
+  Object(bool isLiteral, variant<string, unsigned long int> value)
+      : isLiteral(isLiteral), value(value) {}
 };
 
 //  TODO: make subject and object classes / enums of their own
