@@ -8,6 +8,9 @@
 using namespace std;
 using namespace wtr;
 
+void performShutdown(thread *t, TransducerManager *manager);
+
+//  TODO: put elsewhere.
 TransducerManager *initializeTransducerManager() {
   return new TransducerManager;
 }
@@ -34,6 +37,9 @@ void processQueue(const TransducerManager *manager) {
       event e = eventQueue.front();
       eventQueue.pop();
 
+      //  TODO: implement case
+      //  TODO: implement rename
+      //  TODO: implement move
       if (e.effect_type == event::effect_type::destroy) {
         cout << "path " << e.path_name << " destroyed";
       } else {
@@ -53,33 +59,33 @@ void processQueue(const TransducerManager *manager) {
 
 int main() {
 
+  //  TODO: get from config
   const char *homeDir = std::getenv("HOME");
   if (!homeDir) {
     cerr << "Failed to get home directory" << endl;
     return 1;
   }
 
+  // TODO: give config transducers as argument.
   TransducerManager *manager = initializeTransducerManager();
 
   // Start the event processing thread with the manager
-  thread processingThread([manager]() { processQueue(manager); });
+  thread processingThread(
+      [manager]() { processQueue(manager); }); //  TODO: add Graph!
 
   // Watch the user's home directory asynchronously
   auto watcher = watch(homeDir, queueEvent);
 
   // Main thread can continue doing other work here
   getchar();
+  performShutdown(&processingThread, manager);
+  return watcher.close() ? 0 : 1;
+}
 
-  //  TODO: created method to cleanly close the full service. Remove and clean
-  //  up threads. Remove data structures. An interprocess signal should be able
-  //  to cleanly shutdown the service.
-  // Stop the watcher and processing thread
+void performShutdown(thread *t, TransducerManager *manager) {
   running = false;
-  cv.notify_one();         // Notify the processing thread to exit
-  processingThread.join(); // TODO: maybe use .detach()?
+  cv.notify_one();
+  t->join();
 
   delete manager;
-
-  // Close the watcher
-  return watcher.close() ? 0 : 1;
 }
