@@ -1,4 +1,5 @@
 #include "TransducerManager.hpp"
+#include "DefaultTransducer.hpp"
 #include "Transducer.hpp"
 
 using namespace std;
@@ -12,13 +13,15 @@ std::vector<Triple> TransducerManager::processFile(const File &file) const {
   string extension = file.path.substr(file.path.find_last_of('.') + 1);
   vector<Triple> result;
 
+  DefaultTransducer defaultTransducer;
+  auto defaultResult = defaultTransducer.process(file);
+  result.insert(result.end(), defaultResult.begin(), defaultResult.end());
+
   auto it = transducers.find(extension);
   if (it != transducers.end()) {
-    return it->second->process(file); // transducer found
-  } else {
-    // default transducer  TODO: create good default transducer. Prefix matching system?
-    result.push_back(
-        *new Triple(file.path, "hasExtension", *new Object(true, extension)));
-    return result;
+    auto specificResult = it->second->process(file);
+    result.insert(result.end(), specificResult.begin(), specificResult.end());
   }
+
+  return result;
 }

@@ -9,7 +9,7 @@ atomic<bool> running(true);
 mutex mtx;
 condition_variable cv;
 
-vector<string> blacklistedPaths = {};
+vector<string> blacklistedPaths = {"/home/kayasem/.var"};
 
 bool isBlacklisted(const string& path) {
   for (const auto& blacklistedPath : blacklistedPaths) {

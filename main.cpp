@@ -12,7 +12,20 @@ TransducerManager *initializeTransducerManager() {
   return new TransducerManager;
 }
 
-void processQueue(TransducerManager *manager) {
+void printTriple(const Triple &triple) {
+  std::cout << triple.subject << ", " << triple.predicate << ", ";
+
+  // Use std::visit to access the variant value in Object
+  std::visit(
+      [](const auto &v) {
+        std::cout << v;
+      }, // Lambda to handle all variant types
+      triple.object.value);
+
+  std::cout << std::endl;
+}
+
+void processQueue(const TransducerManager *manager) {
   while (running) {
     unique_lock<mutex> lock(mtx);
     cv.wait(lock, [] { return !eventQueue.empty() || !running; });
@@ -21,12 +34,18 @@ void processQueue(TransducerManager *manager) {
       event e = eventQueue.front();
       eventQueue.pop();
 
-      // Example: Process the event using the manager and transducer
-      cout << "trying to process " << e.path_name << endl;
-      auto result = manager->processFile(File(e.path_name));
+      if (e.effect_type == event::effect_type::destroy) {
+        cout << "path " << e.path_name << " destroyed";
+      } else {
 
-      for (const auto &[subject, predicate, object] : result) {
-        cout << subject << ", " << predicate << ", " << object.value << endl;
+        // Example: Process the event using the manager and transducer
+        auto result = manager->processFile(File(e.path_name));
+
+        for (const auto triple : result) {
+          printTriple(triple);
+        }
+
+        cout << endl;
       }
     }
   }
@@ -51,12 +70,13 @@ int main() {
   // Main thread can continue doing other work here
   getchar();
 
-  //  TODO: created method to cleanly close the full service. Remove and clean up threads. Remove data structures.
-  //  An interprocess signal should be able to cleanly shutdown the service.
+  //  TODO: created method to cleanly close the full service. Remove and clean
+  //  up threads. Remove data structures. An interprocess signal should be able
+  //  to cleanly shutdown the service.
   // Stop the watcher and processing thread
   running = false;
-  cv.notify_one(); // Notify the processing thread to exit
-  processingThread.join();
+  cv.notify_one();         // Notify the processing thread to exit
+  processingThread.join(); // TODO: maybe use .detach()?
 
   delete manager;
 
